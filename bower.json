@@ -1,0 +1,23 @@
+{
+  "name": "ticketeer-reloaded",
+  "authors": [
+    "Santiago Baldrich <santiago.baldrich@gmail.com>"
+  ],
+  "description": "Ticket app",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/main/resources/public",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6"
+  }
+}

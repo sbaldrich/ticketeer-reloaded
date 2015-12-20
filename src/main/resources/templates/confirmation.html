@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+	<title>All events</title>
+</head>
+	<body>
+		<h1 layout:fragment="header">Order Confirmation</h1>
+		<div layout:fragment="content" class="container">
+			<strong>Your order has been placed.</strong>
+			<p>
+				Thank you for using Ticketeer! you will receive a confirmation email in the next few minutes.
+			</p> 
+			
+			<h6>Details of your order are presented below</h6>
+			<h5><small>Event: </small><span th:text="${order.event.name}"></span></h5>
+			<h5><small>seats: </small><span th:text="${order.numberOfTickets}"></span></h5>
+			<a class="btn btn-info" href="/">Done</a>
+		</div>
+	</body>
+</html>
