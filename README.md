@@ -8,6 +8,8 @@ A toy ticket application to compare development tools.
 
 #### Running Ticketeer
 
-After cloning the repository, run `bower install` to install some dependencies. (Don't have bower? Get it [here](http://bower.io/#install-bower)).
+* Ticketeer expects to find a Rabbit server running on `localhost` with default config.
+* After cloning the repository, run `bower install` to install some dependencies. (Don't have bower? Get it [here](http://bower.io/#install-bower)).
+* Run `./gradlew bootRun` to start the application on port 8080. The default username is `sbaldrich` with password `password`.
 
-Run `./gradlew bootRun` to start the application on port 8080. The default username is `sbaldrich` with password `password`.
+

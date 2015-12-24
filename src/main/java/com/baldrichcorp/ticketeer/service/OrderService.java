@@ -1,7 +1,7 @@
 package com.baldrichcorp.ticketeer.service;
 
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.baldrichcorp.ticketeer.model.Order;
@@ -9,14 +9,14 @@ import com.baldrichcorp.ticketeer.model.Order;
 @Service
 public class OrderService {
   
-  private JmsTemplate jmsTemplate;
+  private AmqpTemplate template;
   
   @Autowired
-  public OrderService(JmsTemplate jmsTemplate){
-    this.jmsTemplate = jmsTemplate;
+  public OrderService(AmqpTemplate jmsTemplate){
+    this.template = jmsTemplate;
   }
   
   public void placeOrder(Order order){
-    jmsTemplate.convertAndSend("mailbox", order);
+    template.convertAndSend("mailbox", order);
   }
 }
