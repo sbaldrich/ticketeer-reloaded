@@ -1,0 +1,18 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+	<title>All events</title>
+</head>
+	<body>
+		<h1 layout:fragment="header">Events</h1>
+		<div layout:fragment="content" class="container">
+			<div th:each="ord : ${orders}">
+				<h4>
+					<a href="#"><span th:text="${ord.seats}"></span></a>
+				</h4>
+				<p th:text="${ord.price}"></p>
+			</div>
+		</div>
+</body>
+</html>
