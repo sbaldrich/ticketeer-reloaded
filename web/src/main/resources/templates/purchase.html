@@ -2,19 +2,31 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorator="layout">
 <head>
-	<title>All events</title>
+<title>All events</title>
 </head>
-	<body>
-		<h1 layout:fragment="header">Place order for <span th:text="${event.name}"></span></h1>
-		<div layout:fragment="content" class="container">
-			<form th:action="${form.confirmation.href}" th:object="${form}" th:method="POST">
+<body>
+	<h1 layout:fragment="header">
+		Place order for <span th:text="${event.name}"></span>
+	</h1>
+	<div layout:fragment="content" class="container">
+		<div>
+			<h4>Pricing by location</h4>
+			<ul>
+			<li>General: <span class="label label-info" th:text="${event.price}"></span></li>
+			</ul>
+		</div>
+		<div>
+			<h4>Purchase</h4>
+			<form th:action="${confirmation.href}"
+				th:object="${preOrder}" th:method="POST">
 				<div class="form-group">
-  					<label for="tickets">Number of tickets:</label>
-  					<input name="tickets" type="number" min="1" max="10" th:field="*{seats}"/>
-  					<input name="eventId" type="hidden" th:field="*{eventId}"></input>
-  				</div>
-	  			<button type="submit" class="btn btn-success">Purchase tickets</button>
+					<label for="tickets">Number of tickets:</label> <input
+						name="tickets" type="number" min="1" max="10" th:field="*{seats}" />
+					<input name="eventId" type="hidden" th:field="*{eventId}"></input>
+				</div>
+				<button type="submit" class="btn btn-success">Purchase tickets</button>
 			</form>
 		</div>
-	</body>
+	</div>
+</body>
 </html>

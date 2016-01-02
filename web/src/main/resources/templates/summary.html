@@ -7,16 +7,18 @@
 	<body>
 		<h1 layout:fragment="header">Order Confirmation</h1>
 		<div layout:fragment="content" class="container">
-			<strong>Your order has been placed.</strong>
+			<strong>Order summary</strong>
 			<p>
-				Thank you for using Ticketeer! you will receive a confirmation email in the next few minutes.
+				Please verify your order
 			</p> 
 			
 			<h6>Details of your order are presented below</h6>
 			<h5><small>Event: </small><span th:text="${order.event.name}"></span></h5>
 			<h5><small>seats: </small><span th:text="${order.numberOfTickets}"></span></h5>
 			<h4><small>Total price: </small><span th:text="${order.price}"></span></h4>
-			<a class="btn btn-info" href="/">Done</a>
+			<form action="/confirm" th:method="POST">
+				<button type="submit" class="btn btn-info">Purchase tickets</button>
+			</form>
 		</div>
 	</body>
 </html>

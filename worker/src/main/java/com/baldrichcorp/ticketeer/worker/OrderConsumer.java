@@ -16,22 +16,13 @@ public class OrderConsumer {
   private static final Logger log = LoggerFactory.getLogger(OrderConsumer.class);
   
   private OrderRepository orderRepository;
-  private EventRepository eventRepository;
   
   @Autowired
-  public OrderConsumer(OrderRepository orderRepository, EventRepository eventRepository){
+  public OrderConsumer(OrderRepository orderRepository){
     this.orderRepository = orderRepository;
-    this.eventRepository = eventRepository;
   }
   
   public void process(Order order) {
-    log.info(" === processing order for {} seats for {} [ {} ]", order.getNumberOfTickets(), order.getEvent().getName(), order.hashCode());
-    log.info("== querying existing events ==");
-    Iterable<Event> events = eventRepository.findAll();
-    for(Event ev : events){
-      log.info(ev.getId() + " - " + ev.getName());
-    }
-    log.info("== done ==");
     orderRepository.save(order);
   }
 }

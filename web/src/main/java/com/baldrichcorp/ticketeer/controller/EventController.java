@@ -1,7 +1,6 @@
 package com.baldrichcorp.ticketeer.controller;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import java.util.stream.StreamSupport;
 
@@ -11,17 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.baldrichcorp.ticketeer.model.Event;
 import com.baldrichcorp.ticketeer.model.Order;
+import com.baldrichcorp.ticketeer.model.PreOrder;
 import com.baldrichcorp.ticketeer.service.EventService;
 import com.baldrichcorp.ticketeer.service.OrderService;
 
 @Controller
+@SessionAttributes("order")
 public class EventController {
   
   private static Logger log = LoggerFactory.getLogger(EventController.class);
@@ -51,50 +55,47 @@ public class EventController {
   @RequestMapping(value = "/purchase/{id}", method = RequestMethod.GET)
   public ModelAndView purchase(@PathVariable long id){
     Event event = eventService.getEvent(id);
-    return new ModelAndView("purchase").addObject("form", new PurchaseForm(event.getId())).addObject(event);
+    PreOrder preOrder = new PreOrder(id);
+    return new ModelAndView("purchase").addObject("confirmation", 
+        linkTo(methodOn(EventController.class).confirmOrder(preOrder)).withRel("confirm:" + id))
+        .addObject(event)
+        .addObject(preOrder);
   }
   
   @RequestMapping(value = "/purchase", method = RequestMethod.POST)
-  public ModelAndView confirmOrder(PurchaseForm form){
-    Order order = new Order(eventService.getEvent(form.getEventId()), null, form.getSeats(), null);
-    log.info("placing order with code {}" , order.hashCode());
-    orderService.placeOrder(order);
-    return new ModelAndView("confirmation").addObject("order", order);
+  public ModelAndView confirmOrder(PreOrder preOrder){
+    Order order = orderService.generateOrder(preOrder);
+    return new ModelAndView("summary").addObject("order", order);
   }
   
-  public static class PurchaseForm{
-    private long eventId;
-    private short seats;
+  @RequestMapping(value = "/confirm", method = RequestMethod.POST)
+  public ModelAndView placeOrder(@ModelAttribute Order order, SessionStatus sessionStatus){
+    log.info("placing order with code {} for event {}" , order.hashCode(), order.getEvent().getName());
+    orderService.placeOrder(order);
+    sessionStatus.setComplete();
+    return new ModelAndView("confirmation");
+  }
+  
+/*  public static class PreOrderAndLink{
+    private PreOrder preOrder;
     private Link confirmation;
     
-    public PurchaseForm(){}
+    public PreOrderAndLink(){}
     
-    public PurchaseForm(long eventId){
-      this.eventId = eventId;
-      this.confirmation = linkTo(methodOn(EventController.class).confirmOrder(this)).withRel("confirm:" + eventId);
+    public PreOrderAndLink(long eventId){
+      this.preOrder = new PreOrder(eventId);
+      this.confirmation = linkTo(methodOn(EventController.class).confirmOrder(preOrder)).withRel("confirm:" + eventId);
     }
 
-    public long getEventId(){
-      return eventId;
+    public PreOrder getPreOrder(){
+      return preOrder;
     }
     
-    public void setEventId(long eventId){
-      this.eventId = eventId;
-    }
-    
-    public short getSeats() {
-      return seats;
-    }
-
-    public void setSeats(short seats) {
-      this.seats = seats;
-    }
-
     public Link getConfirmation() {
       return confirmation;
     }
     
-  }
+  }*/
   
   public static class EventAndLink{
     private Event event;
@@ -120,6 +121,6 @@ public class EventController {
     public Link getPurchase(){
       return purchase;
     }
-        
   }
+  
 }
